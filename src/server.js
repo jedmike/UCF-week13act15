@@ -4,9 +4,37 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const publicDirectoryPath = path.join(__dirname, "../public");
+app.use(express.urlencoded({ extended: true}));
+app.use(express.json())
 
-app.use(express.static(publicDirectoryPath));
+const tables = [];
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname,'../public/index.html'))
+})
+
+app.get('/reserve', (req, res) => {
+    res.sendFile(path.join(__dirname,'../public/reserve.html'))
+})
+
+app.get('/tables', (req, res) => {
+    res.sendFile(path.join(__dirname,'../public/tables.html'))
+})
+
+app.get('/api/tables', (req, res) => {
+    return res.json(tables);
+})
+
+app.post('/api/tables', (req, res) => {
+    const reservation = req.body;
+
+    console.log(reservation)
+
+    tables.push(reservation)
+
+    res.json(reservation)
+
+})
 
 app.listen(port, () => {
     console.log(`Server is up on port: ${port}`)
